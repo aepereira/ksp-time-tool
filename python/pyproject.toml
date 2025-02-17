@@ -1,0 +1,29 @@
+[project]
+name = "ksp_time_tool"
+version = "0.0.1"
+authors = [
+  { name="Arnaldo E. Pereira", email="aepereira@gmail.com" },
+]
+description = "KSP Time Tool - Tool for date conversion, alarms, and maneuver planning for Kerbal Space Program."
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+
+    "krpc>=0.5.4",
+
+    "PyQt5>=5.0.0, <6.0.0"
+
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+license = {text = "MIT"}
+
+[project.urls]
+Homepage = "https://github.com/aepereira/ksp-time-tool"
+Issues = "https://github.com/aepereira/ksp-time-tool/issues"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
