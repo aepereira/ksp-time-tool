@@ -1,4 +1,5 @@
 from ksp_time_tool.common.ksp_dates import EarthDate, KerbinDate, UTSeconds
+from ksp_time_tool.pyqt_gui.ut_seconds_edit import UTSecondsEdit
 from PyQt5.QtCore import QDate
 from PyQt5.QtWidgets import (QComboBox, QDateEdit, QHBoxLayout, QLabel,
                              QLineEdit, QSpinBox, QTimeEdit, QVBoxLayout,
@@ -103,7 +104,7 @@ class TimeInputWidget(QWidget):
         # Year input
         year_label = QLabel("Year:")
         self.year_input = QSpinBox()
-        self.year_input.setRange(1, 9999)
+        self.year_input.setRange(1, 27604)
         self.year_input.setValue(1)
 
         # Day input
@@ -176,14 +177,13 @@ class TimeInputWidget(QWidget):
         """
         Adds an input field for UT Seconds (Universal Time in seconds since the Kerbal epoch).
         """
+        ut_input_layout = QHBoxLayout()
         # UT Seconds input
         ut_seconds_label = QLabel("UT Seconds:")
-        # Will probably want to change this to a QLineInput with custom validation
-        # for ints from 0 to largest UT in Kerbal: 19760285526235197.
-        self.ut_seconds_input = QSpinBox()
-        self.ut_seconds_input.setRange(0, 2147483647)  # Large range for UT seconds
-        self.ut_seconds_input.setValue(0)  # Default value
+        # Validates input to be between 0 and 254001916799 (corresponding to max date).
+        self.ut_seconds_input = UTSecondsEdit()
 
         # Add widgets to the layout
-        self.input_fields_layout.addWidget(ut_seconds_label)
-        self.input_fields_layout.addWidget(self.ut_seconds_input)
+        ut_input_layout.addWidget(ut_seconds_label)
+        ut_input_layout.addWidget(self.ut_seconds_input)
+        self.input_fields_layout.addLayout(ut_input_layout)
