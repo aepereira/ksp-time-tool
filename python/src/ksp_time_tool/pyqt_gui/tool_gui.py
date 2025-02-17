@@ -287,6 +287,7 @@ class KSPTimeTool(QMainWindow):
         frame_height = max(100, name_edit.sizeHint().height() + button_layout.sizeHint().height() + 30)
         frame.setMinimumHeight(frame_height)
         list_item.setSizeHint(frame.sizeHint())
+        self.update_item_name(list_item, name_edit.text())
 
         return list_item, frame
 
