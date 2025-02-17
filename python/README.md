@@ -4,7 +4,7 @@ This is a simple tool for converting between the different time formats and sett
 
 I made this primarily as a tool for myself because there are some really excellent tools out there for planning transfers and setting maneuvers, like [alexmoon's wonderful KSP Launch Window Planner](https://alexmoon.github.io/ksp), [Krapfy's impressive KSP-MGA-Planner](https://krafpy.github.io/KSP-MGA-Planner/) for planning gravity assists, as well as many mods like [Precise Node](https://forum.kerbalspaceprogram.com/topic/161855-112x-precise-node-continued-precisely-edit-your-maneuver-nodes/) and [MechJeb](https://forum.kerbalspaceprogram.com/topic/154834-112x-anatid-robotics-mumech-mechjeb-autopilot-2143-4th-march-2023/), among many others. These tools are great, but some use Kerbin date format, others use UT dates, and still others use UT seconds for input. I was spending a lot of time converting time units and alt-tabbing between the game and my browser to copy numbers across from one screen to the other. So I made this tool to simplify my life a little bit. In particular, this has made it easier to do the workflow of entering my current vessel's orbital information into KSP Window Planner to calculate a transfer (with times converted to Kerbin dates) and then input the maneuver parameters and time (converted to UT seconds) into Precise Node, and then create an alarm for myself.
 
-![KSP Time Tool](https://github.com/aepereira/ksp-time-tool/images/screenshot.png)
+![KSP Time Tool](https://github.com/aepereira/ksp-time-tool/blob/main/images/screenshot.png?raw=true)
 
 ## Usage
 
