@@ -29,8 +29,6 @@ I threw this together over a weekend, so I didn't get to everything I thought of
 
 * Allowing you to set maneuvers programmatically from KSP Time Tool by linking a time to prograde, normal, and radial $∆v$. This seems easy enough to do it. I just need to think of how I want to change the GUI to accomodate this. It will probably be a very minimal change using the currently empty space on the right hand side of the time list cards for contextual input fields.
 
-* The input widget for UT Seconds currently has a max value of $2147483647$ seconds to the widget I'm using for input. This corresponds to Kerbin date Year 234, Day 163 03:14:07 (19 Jan 2019 03:14:07). This is obviously not ideal for people with long-running games and deep space missions. I'm planning to create a custom widget to be able to input larger numbers as UT seconds. Note that this is a limitation of the UT Seconds input widget only. Dates entered in Kerbin or Earth format will convert to UT seconds correctly, and support dates through Earth year 9999.
-
 * Allowing custom KRPC connections, including remote hosts and non-default ports. I'm thinking this could be cool if, for example, you are playing with friends using a mod like [Houston](https://forum.kerbalspaceprogram.com/topic/118867-104-houston-v100-a-mission-control-ui-for-telemachus/) and you want to generate alarms and maneuvers for their game.
 
 * Syncing alarms and maneuvers. Right now you can only add alarms to a KSP host. You can't view or modify alarms that are already set.

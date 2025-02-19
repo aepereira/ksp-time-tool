@@ -99,6 +99,13 @@ class KSPTimeTool(QMainWindow):
             QMessageBox.critical(self, "Connection Failed", "Could not connect to KSP.")
             return
 
+    def handle_connection_error(self, error):
+        QMessageBox.critical(self, "KSP Client Connection Error", f"{error}")
+        self.vessel_dropdown.clear()
+        self.global_link_checkbox.setEnabled(False)
+        self.toggle_all_links(False, disable=True)
+        self.time_poll_timer.stop()
+
     def update_vessels(self):
         vessels = self.ksp_connection_manager.get_vessels()
         self.vessel_dropdown.clear()
@@ -110,7 +117,13 @@ class KSPTimeTool(QMainWindow):
         Updates the current vessel selection and enables/disables link checkboxes.
         """
         if index >= 0:
-            selected_vessel = self.ksp_connection_manager.select_vessel(index)
+            prev_vessel = self.ksp_connection_manager.get_active_vessel()
+            try:
+                selected_vessel = self.ksp_connection_manager.select_vessel(index)
+            except RuntimeError as r_e:
+                selected_vessel = None
+                self.handle_connection_error(r_e)
+
             if selected_vessel:
                 self.current_vessel_label.setText(f"Current Vessel: {selected_vessel.name}")
                 self.global_link_checkbox.setEnabled(True)  # Enable global checkbox
@@ -123,13 +136,21 @@ class KSPTimeTool(QMainWindow):
                         link_checkbox = custom_widget.findChild(QCheckBox)  # Find the checkbox
                         if link_checkbox:
                             link_checkbox.setEnabled(True)  # Enable the checkbox
-                    # Enable the checkbox for this list time.
+                # Toggle all checkboxes if we switched to a different vessel:
+                if selected_vessel != prev_vessel:
+                    self.global_link_checkbox.setChecked(False)
+                    self.toggle_all_links(False)
                 self.update_current_time()
             else:
                 self.global_link_checkbox.setEnabled(False)  # Disable global checkbox if no vessel
 
     def update_current_time(self):
-        time_info = self.ksp_connection_manager.get_current_time_info()
+        try:
+            time_info = self.ksp_connection_manager.get_current_time_info()
+        except RuntimeError as r_e:
+            time_info = None
+            self.handle_connection_error(r_e)
+
         if time_info:
             current_time_text = (
                 f"{time_info['kerbin']}\n"
@@ -388,7 +409,7 @@ class KSPTimeTool(QMainWindow):
             f"Successfully created {success_count} alarms.\nFailed to create {failure_count} alarms."
         )
 
-    def toggle_all_links(self, state):
+    def toggle_all_links(self, state, disable=False):
         """
         Toggles all individual "Link to Vessel" checkboxes based on the global checkbox state.
         """
@@ -399,6 +420,8 @@ class KSPTimeTool(QMainWindow):
                 link_checkbox = custom_widget.findChild(QCheckBox)
                 if link_checkbox:
                     link_checkbox.setChecked(state == Qt.Checked)
+                    if disable:
+                        link_checkbox.setEnabled(False)
 
     def export_dates(self):
         QMessageBox.information(self, "Export", "Export functionality not yet implemented.")
