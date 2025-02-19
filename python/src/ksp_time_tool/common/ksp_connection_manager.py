@@ -1,6 +1,29 @@
 import krpc
+import krpc.error
 from ksp_time_tool.common.ksp_dates import UTSeconds
 from ksp_time_tool.common.met_time import METTime
+
+
+def check_connection(method):
+    """
+    Decorator for methods below that require a live kRPC connection.
+    """
+    def wrapper(self, *args, **kwargs):
+        try:
+            return method(self, *args, **kwargs)
+        except (
+            krpc.error.ConnectionError,
+            krpc.error.RPCError,
+            krpc.error.EncodingError,
+            krpc.error.StreamError
+        )as c_e:
+            self.reset()
+            raise RuntimeError(f"Error with KSP connection: {c_e}") from c_e
+            # Return connection manager to initial state.
+        except OSError as os_e:
+            self.reset()
+            raise RuntimeError(f"Error probably related to KSP connection: {os_e}") from os_e
+    return wrapper
 
 
 class KSPConnectionManager:
@@ -23,6 +46,7 @@ class KSPConnectionManager:
             print(f"Failed to connect to KSP: {e}")
             return False
 
+    @check_connection
     def update_vessels(self):
         """
         Updates the list of available vessels from the KRPC connection.
@@ -37,6 +61,13 @@ class KSPConnectionManager:
         """
         return self.vessels
 
+    def get_active_vessel(self):
+        """
+        Returns the currently selected vessel.
+        """
+        return self.active_vessel
+
+    @check_connection
     def select_vessel(self, index):
         """
         Selects a vessel by its index in the list of vessels.
@@ -51,6 +82,7 @@ class KSPConnectionManager:
         self.mission_start_seconds = round(ut_seconds - met_seconds)
         return self.active_vessel
 
+    @check_connection
     def get_current_time_info(self):
         """
         Retrieves the current time information from the KRPC connection.
@@ -81,6 +113,7 @@ class KSPConnectionManager:
             "mission_start_seconds": self.mission_start_seconds
         }
 
+    @check_connection
     def create_alarm(self, ksp_date, link_to_vessel=False):
         """
         Creates an in-game alarm at the specified date using KRPC.
@@ -129,3 +162,9 @@ class KSPConnectionManager:
         except Exception as e:
             print(f"Failed to create alarm: {e}")
             return False
+
+    def reset(self):
+        self.connection = None
+        self.vessels = []
+        self.active_vessel = None
+        self.mission_start_seconds = None
