@@ -17,10 +17,11 @@ def check_connection(method):
             krpc.error.EncodingError,
             krpc.error.StreamError
         )as c_e:
+            # Return connection manager to initial state.
             self.reset()
             raise RuntimeError(f"Error with KSP connection: {c_e}") from c_e
-            # Return connection manager to initial state.
         except OSError as os_e:
+            # Return connection manager to initial state.
             self.reset()
             raise RuntimeError(f"Error probably related to KSP connection: {os_e}") from os_e
     return wrapper
